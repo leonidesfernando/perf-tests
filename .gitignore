@@ -6,4 +6,5 @@ jmeter/report/*
 ## lighthouse
 lighthouse/node_modules
 lighthouse/user-flow.report.html
+lighthouse/user-flow.report.json
 lighthouse/package-lock.json

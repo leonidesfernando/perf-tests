@@ -1,6 +1,7 @@
 const fs = require('fs')
 const puppeteer = require('puppeteer')
 const lighthouse = require('lighthouse/lighthouse-core/fraggle-rock/api.js')
+const {generateReport} = require('lighthouse/report/generator/report-generator.js');
 
 const waitTillHTMLRendered = async (page, timeout = 30000) => {
   const checkDurationMsecs = 1000;
@@ -141,7 +142,13 @@ async function captureReport() {
 	
 	fs.writeFileSync(reportPath, report);
 	//fs.writeFileSync(reportPathJson, reportJson);
-	
+
+	//-- to generate json file
+	const reportPathJson = __dirname + '/user-flow.report.json';
+	const flowResult = await flow.createFlowResult();
+	const jsonReportContent =  generateReport(flowResult, "json");
+	const reportJson = JSON.stringify(jsonReportContent).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+	fs.writeFileSync(reportPathJson, reportJson);
     await browser.close();
 }
 captureReport();

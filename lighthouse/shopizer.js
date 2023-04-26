@@ -147,8 +147,8 @@ async function captureReport() {
 	const reportPathJson = __dirname + '/user-flow.report.json';
 	const flowResult = await flow.createFlowResult();
 	const jsonReportContent =  generateReport(flowResult, "json");
-	const reportJson = JSON.stringify(jsonReportContent).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-	fs.writeFileSync(reportPathJson, reportJson);
+	//const reportJson = JSON.stringify(jsonReportContent).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+	fs.writeFileSync(reportPathJson, jsonReportContent);
     await browser.close();
 }
 captureReport();

@@ -1,3 +1,9 @@
+# JMeter
 jmeter/jmeter.log
 jmeter/reportResult.jtl
 jmeter/report/*
+
+## lighthouse
+lighthouse/node_modules
+lighthouse/user-flow.report.html
+lighthouse/package-lock.json

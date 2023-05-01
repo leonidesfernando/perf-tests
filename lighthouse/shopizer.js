@@ -43,7 +43,6 @@ async function captureReport() {
 	
 	const navigationPromise = page.waitForNavigation({timeout: 30000, waitUntil: ['domcontentloaded']});
 	await page.goto(baseURL);
-    await navigationPromise;
 		
 	const flow = await lighthouse.startFlow(page, {
 		name: 'shopizer',

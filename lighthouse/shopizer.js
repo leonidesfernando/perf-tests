@@ -38,7 +38,7 @@ async function captureReport() {
 	const baseURL = "http://localhost";
 	
 	await page.setViewport({"width":1920,"height":1080});
-	await page.setDefaultTimeout(10000);
+	page.setDefaultTimeout(10000);
 	await page.setUserAgent( 'UA-TEST' );
 	
 	const navigationPromise = page.waitForNavigation({timeout: 30000, waitUntil: ['domcontentloaded']});

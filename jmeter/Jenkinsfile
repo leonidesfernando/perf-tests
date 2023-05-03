@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    triggers { cron("H/5 * * * *") }
+    options {
+      buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '10', daysToKeepStr: '', numToKeepStr: '10')
+    }
+    parameters {
+        choice(name: "N_USERS", choices: ["3", "4", "5"], description: "Number of users for back-end jobs")
+    }
+    stages {
+        stage('Configuring') {
+            steps{
+                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
+            }
+        }
+        stage('Cloning Git repo') {
+            steps {
+                 dir("${env.WORKSPACE}/${BUILD_NUMBER}"){
+                    git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'     
+                 }
+            }
+        }
+        stage('Running JMeter') {
+            steps {
+                dir("${env.WORKSPACE}/${BUILD_NUMBER}/jmeter"){
+                    bat(/runAndGenerateReport.bat $params.N_USERS/)
+                }
+            }
+        }
+        stage('Publishing results') {
+            steps {
+                dir("${env.WORKSPACE}/${BUILD_NUMBER}/jmeter"){
+                    archiveArtifacts artifacts: 'report/', fingerprint: true
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,75 @@
+def cloneRepo(){
+    return {
+        dir("${env.WORKSPACE}/${BUILD_NUMBER}"){
+            git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
+        }   
+    }
+}
+
+def createDir(){
+    return {
+        bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
+    }
+}
+
+def configuringLighthouse() {
+    return {
+        dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+            bat(/npm install/)
+        }
+    }
+}
+
+def runningLighthouse(){
+    return {
+        dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+            bat(/node shopizer.js/)
+        }
+    }
+}
+
+def publishResults(){
+    return {
+        dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+            archiveArtifacts artifacts: 'report.json', fingerprint: true
+            archiveArtifacts artifacts: 'user-flow.report.html', fingerprint: true
+            lighthouseReport file: 'report.json', name: 'My Report'
+        }
+    }
+}
+
+
+def callFunction(functions){
+    return {
+        functions.each { func  ->
+            func.value.call()
+        }
+    }
+}
+
+def map = [
+	"Configuring" :[
+		func: createDir()
+	],
+    "Cloning Git repo": [
+        func: cloneRepo()
+    ],
+    "Configuring Lighthouse": [
+        func: configuringLighthouse()
+    ],
+    "Running Lighthouse": [
+        func: runningLighthouse()
+    ],
+    "Publishing results": [
+        func:  publishResults()
+    ]
+];
+
+
+node {        
+	map.each { entry  ->
+	   stage(entry.key){
+		   callFunction(entry.value).call()
+	   };
+	}
+}

@@ -1,11 +1,11 @@
 pipeline {
     agent any
-    triggers { cron("H/5 * * * *") }
+    //triggers { cron("H/5 * * * *") }
     options {
       buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '10', daysToKeepStr: '', numToKeepStr: '10')
     }
     parameters {
-        choice(name: "N_USERS", choices: ["3", "4", "5"], description: "Number of users for back-end jobs")
+        choice(name: "N_USERS", choices: ["3", "5", "10"], description: "Number of users for back-end jobs")
     }
     stages {
         stage('Configuring') {

@@ -6,6 +6,8 @@ pipeline {
     }
     parameters {
         choice(name: "N_USERS", choices: ["3", "5", "10"], description: "Number of users for back-end jobs")
+        string(name: "RAMP_UP", defaultValue: "1", trim: true, description: "Ramp-up period (seconds)")
+        string(name: "LOOP", defaultValue: "1", trim: true, description: "Loop count")
     }
     stages {
         stage('Configuring') {
@@ -23,7 +25,7 @@ pipeline {
         stage('Running JMeter') {
             steps {
                 dir("${env.WORKSPACE}/${BUILD_NUMBER}/jmeter"){
-                    bat(/runAndGenerateReport.bat $params.N_USERS/)
+                    bat(/runAndGenerateReport.bat $params.N_USERS $params.RAMP_UP $params.LOOP /)
                 }
             }
         }

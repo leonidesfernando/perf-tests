@@ -13,12 +13,10 @@ IF EXIST "%currentPath%\jmeter.log" DEL /s /Q "%currentPath%\jmeter.log" 1>nul &
 IF EXIST "%currentPath%\temp\" RMDIR /Q/S %currentPath%\temp & @echo "  /> temp folder REMOVED OK"
 
 
-IF "%~1" == "" set nUsers=5
-
-
-@echo "Running with: " %nUsers% " users"
+rem IF "%~1" == "" set nUsers=5
+rem @echo "Running with: " %nUsers% " users"
 
 
 @echo on
 @echo "Running JMeter Tests and generating dashboard report"
-jmeter -n -t BackEnd-Perf-Test.jmx -J%nUsers% -l reportResult.jtl & jmeter -g reportResult.jtl -o report
+jmeter -n -t BackEnd-Perf-Test.jmx -JnUsers=%nUsers% -JRampUp=%~2 -JnLoops=%~3 -l reportResult.jtl & jmeter -g reportResult.jtl -o report

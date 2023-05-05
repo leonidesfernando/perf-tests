@@ -87,7 +87,6 @@ async function captureReport() {
 	await flow.startTimespan({ stepName: 'Navigate to "Tables" tab' });
 		await page.waitForSelector(tablesTab);
 		await page.click(tablesTab);
-		await navigationPromise;
 		await waitTillHTMLRendered(page);
 	await flow.endTimespan();
 	console.log('Tables page is opened');
@@ -98,7 +97,7 @@ async function captureReport() {
 	await flow.startTimespan({ stepName: 'Open a table product cart (click on a table)' });
 		await page.waitForSelector(tableProduct);
 		await page.click(tableProduct);
-		await navigationPromise;
+		//await navigationPromise;
 		await waitTillHTMLRendered(page);
 	await flow.endTimespan();
 	console.log('Table product clicked');
@@ -108,7 +107,7 @@ async function captureReport() {
 	await flow.startTimespan({ stepName: 'Add table to Cart (click "Add to Cart" button)' });
 		await page.waitForSelector(addTableToCart);
 		await page.click(addTableToCart);
-		await navigationPromise;
+		//await navigationPromise;
 		await waitTillHTMLRendered(page);
 	await flow.endTimespan();
 	console.log('Table added to cart');
@@ -117,7 +116,7 @@ async function captureReport() {
 	console.log('Opening Tables');
 	await flow.startTimespan({ stepName: 'Open Cart' });
 		await page.goto(baseURL+'/cart');
-		await navigationPromise;
+		//await navigationPromise;
 		await waitTillHTMLRendered(page);
 	await flow.endTimespan();
 	console.log('Cart opened');
@@ -126,7 +125,7 @@ async function captureReport() {
 	console.log('Click "Proceed to checkout"');
 	await flow.startTimespan({ stepName: 'Click "Proceed to checkout"' });
 		await page.goto(baseURL+'/checkout');
-		await navigationPromise;
+		//await navigationPromise;
 		await waitTillHTMLRendered(page);
 	await flow.endTimespan();
 	console.log('Checkout done');

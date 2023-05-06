@@ -73,7 +73,7 @@ pipeline{
     stages{
         stage('Configuring') {
             steps{
-                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
+                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)z
             }
         }
         stage("Clonning git repo"){
@@ -97,8 +97,11 @@ pipeline{
                     for(int i = 1; i <= count; i++){
                         echo "couting"
                         stage("Running"){
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
-                                bat(/node shopizer.js/)
+                            steps{
+                                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${count}/)
+                                dir("${env.WORKSPACE}/${BUILD_NUMBER}\${count}/lighthouse"){
+                                    bat(/node shopizer.js/)
+                                }
                             }
                         }
                     }

@@ -81,15 +81,15 @@ pipeline{
                         def path = "${env.WORKSPACE}\\${BUILD_NUMBER}\\${i}"
                         echo path
                         stage('Configuring') {
-                            bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${i}/)
+                            bat(/mkdir ${path}/)
                         }
                         stage("Clonning git repo"){                            
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}"){
+                            dir("${path}"){
                                 git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
                             }
                         }
                         stage("Configuring Lighthouse"){
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}/lighthouse"){
+                            dir("${path}/lighthouse"){
                                 bat(/npm install/)
                             }
                         }

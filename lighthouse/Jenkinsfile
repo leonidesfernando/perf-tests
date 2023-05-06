@@ -78,10 +78,11 @@ pipeline{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i <= count; i++){
                         echo "couting"
-                        def path = "${env.WORKSPACE}\\${BUILD_NUMBER}\\${i}"
+                        def basePath = "${env.WORKSPACE}\\${BUILD_NUMBER}\\${i}"
+                        def path = basePath + "/lighthouse"
                         echo path
                         stage('Configuring') {
-                            bat(/mkdir ${path}/)
+                            bat(/mkdir ${basePath}/)
                         }
                         stage("Clonning git repo"){                            
                             dir("${path}"){
@@ -89,17 +90,17 @@ pipeline{
                             }
                         }
                         stage("Configuring Lighthouse"){
-                            dir("${path}/lighthouse"){
+                            dir("${path}"){
                                 bat(/npm install/)
                             }
                         }
                         stage("Running Lighthouse Scripts"){
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                            dir("${path}"){
                                 bat(/node shopizer.js/)
                             }
                         }
                         stage("Publishing results"){
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                            dir("${path}"){
                                 archiveArtifacts artifacts: 'report.json', fingerprint: true
                                 archiveArtifacts artifacts: 'user-flow.report.html', fingerprint: true
                                 lighthouseReport file: 'report.json', name: 'My Report'

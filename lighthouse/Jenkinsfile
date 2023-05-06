@@ -96,6 +96,11 @@ pipeline{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i <= count; i++){
                         echo "couting"
+                        stage("Running"){
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                                bat(/node shopizer.js/)
+                            }
+                        }
                     }
                  }
             }

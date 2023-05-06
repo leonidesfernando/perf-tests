@@ -75,7 +75,7 @@ pipeline{
         stage("Looping"){
             steps{
                 script{
-                    def count = "${params.REPETITIONS}"
+                    def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i < count; i++){
                         map.each { entry  ->
                             stage(entry.key + " :" + count){

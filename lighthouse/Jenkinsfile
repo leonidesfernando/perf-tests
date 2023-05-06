@@ -83,11 +83,18 @@ pipeline{
                 }
             }
         }
+        stage("Configuring Lighthouse"){
+            steps{
+                dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                    bat(/npm install/)
+                }
+            }
+        }
         stage("Looping"){
             steps{
                 script{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
-                    for(int i = 1; i < count; i++){
+                    for(int i = 1; i <= count; i++){
                         echo "couting"
                     }
                  }

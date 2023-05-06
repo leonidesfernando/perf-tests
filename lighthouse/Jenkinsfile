@@ -77,6 +77,11 @@ pipeline{
                 script{
                     def count = "${params.REPEAT}"
                     echo count
+                    map.each { entry  ->
+                        stage(entry.key + " :" + count){
+                            callFunction(entry.value).call()
+                        };
+                    }
                  }
             }
         }

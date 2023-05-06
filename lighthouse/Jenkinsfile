@@ -75,7 +75,7 @@ pipeline{
         stage("Loop"){
             steps{
                 script{
-                    def count = ${params.REPEAT}
+                    def count = "${params.REPEAT}"
                     echo count
                  }
             }

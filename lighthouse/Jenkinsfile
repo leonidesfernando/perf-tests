@@ -71,19 +71,23 @@ pipeline{
         choice(name: "REPETITIONS", choices: ["1", "3", "5", "10"], description: "Number of repetitions")
     }
     stages{
-        
+        stage('Configuring') {
+            steps{
+                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
+            }
+        }
+        stage("Clonning git repo"){
+            steps{
+                dir("${env.WORKSPACE}/${BUILD_NUMBER}"){
+                    git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
+                }
+            }
+        }
         stage("Looping"){
             steps{
                 script{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
-                    stage('Configuring') {
-                        bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
-                    }
-                    stage("Clonning git repo"){
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}"){
-                            git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
-                        }
-                    }
+
                     for(int i = 1; i < count; i++){
                         echo count
                         /*map.each { entry  ->

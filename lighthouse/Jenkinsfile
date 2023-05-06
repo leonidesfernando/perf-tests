@@ -93,6 +93,18 @@ pipeline{
                                 bat(/npm install/)
                             }
                         }
+                        stage("Running Lighthouse Scripts"){
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                                bat(/node shopizer.js/)
+                            }
+                        }
+                        stage("Publishing results"){
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/lighthouse"){
+                                archiveArtifacts artifacts: 'report.json', fingerprint: true
+                                archiveArtifacts artifacts: 'user-flow.report.html', fingerprint: true
+                                lighthouseReport file: 'report.json', name: 'My Report'
+                            }
+                        }
                     }
                  }
             }

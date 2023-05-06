@@ -78,7 +78,7 @@ pipeline{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i <= count; i++){
                         echo "couting"
-                        def path = "${env.WORKSPACE}\${BUILD_NUMBER}\${i}"
+                        def path = "${env.WORKSPACE}\\${BUILD_NUMBER}\\${i}"
                         echo path
                         stage('Configuring') {
                             bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${i}/)

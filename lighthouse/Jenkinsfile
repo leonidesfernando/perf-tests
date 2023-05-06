@@ -73,7 +73,7 @@ pipeline{
     stages{
         stage('Configuring') {
             steps{
-                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)z
+                bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
             }
         }
         stage("Clonning git repo"){

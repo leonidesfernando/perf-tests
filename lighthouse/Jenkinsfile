@@ -85,7 +85,7 @@ pipeline{
                             bat(/mkdir ${basePath}/)
                         }
                         stage("Clonning git repo"){                            
-                            dir("${path}"){
+                            dir("${basePath}"){
                                 git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
                             }
                         }

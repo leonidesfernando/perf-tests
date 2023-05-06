@@ -71,10 +71,12 @@ pipeline{
         choice(name: "REPEAT", choices: ["1", "3", "5", "10"], description: "Number of repetitions")
     }
     stages{
-        def count = $params.REPEAT
+        
         stage("Loop"){
             steps{
                 script{
+                    def count = $params.REPEAT
+                    echo count
                  }
             }
         }

@@ -78,7 +78,7 @@ pipeline{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i < count; i++){
                         map.each { entry  ->
-                            stage(entry.key + " :" + count){
+                            stage(entry.key + " :" + i + "of " + count){
                                 callFunction(entry.value).call()
                             };
                         }

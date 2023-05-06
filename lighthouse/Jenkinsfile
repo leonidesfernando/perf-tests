@@ -78,33 +78,21 @@ pipeline{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
                     for(int i = 1; i <= count; i++){
                         echo "couting"
-                        /*stage("Running"){
+                        def path = "${env.WORKSPACE}\${BUILD_NUMBER}\${i}"
+                        echo path
+                        stage('Configuring') {
                             bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${i}/)
-                            bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${i}\lighthouse/)
-                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}/lighthouse"){
-                                bat(/node shopizer.js/)
+                        }
+                        stage("Clonning git repo"){                            
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}"){
+                                git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
                             }
-                        }*/
-                        //
-        stage('Configuring') {
-
-            bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${i}/)
-    
-        }
-        stage("Clonning git repo"){
-            
-                dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}"){
-                    git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
-                }
-            
-        }
-        stage("Configuring Lighthouse"){
-            
-                dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}/lighthouse"){
-                    bat(/npm install/)
-                }
-            
-        }
+                        }
+                        stage("Configuring Lighthouse"){
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}/${i}/lighthouse"){
+                                bat(/npm install/)
+                            }
+                        }
                     }
                  }
             }

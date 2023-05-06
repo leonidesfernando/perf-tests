@@ -76,12 +76,21 @@ pipeline{
             steps{
                 script{
                     def count = Integer.valueOf("${params.REPETITIONS}".toString())
+                    stage('Configuring') {
+                        bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}/)
+                    }
+                    stage("Clonning git repo"){
+                            dir("${env.WORKSPACE}/${BUILD_NUMBER}"){
+                            git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
+                        }
+                    }
                     for(int i = 1; i < count; i++){
-                        map.each { entry  ->
+                        echo count
+                        /*map.each { entry  ->
                             stage(entry.key + " :" + i + "of " + count){
                                 callFunction(entry.value).call()
                             };
-                        }
+                        }*/
                     }
                  }
             }

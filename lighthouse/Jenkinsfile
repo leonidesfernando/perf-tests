@@ -72,7 +72,7 @@ pipeline{
     stages{
         script{
             def count = "${params.REPEAT}"
-            for(int i = 1 i <= count; i++){
+            for(int i = 1; i <= count; i++){
                 stage("Loop " + i){
                     steps{
                         map.each { entry  ->

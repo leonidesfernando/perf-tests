@@ -70,17 +70,17 @@ pipeline{
         choice(name: "REPEAT", choices: ["1", "3", "5", "10"], description: "Number of repetitions")
     }
     stages{
-        script{
-            def count = "${params.REPEAT}"
-            for(int i = 1; i <= count; i++){
-                stage("Loop " + i){
-                    steps{
+        def count = "${params.REPEAT}"
+        for(int i = 1; i <= count; i++){
+            stage("Loop "){
+                steps{
+                    script{
                         map.each { entry  ->
-                            stage(entry.key){
-                                echo "$entry.value"
-                                //callFunction(entry.value).call()
-                            }
-                        }                    
+                        stage(entry.key){
+                            echo "$entry.value"
+                            //callFunction(entry.value).call()
+                        };
+                        }                   
                     }
                 }
             }

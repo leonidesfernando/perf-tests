@@ -87,23 +87,23 @@ pipeline{
                         }*/
                         //
         stage('Configuring') {
-            steps{
+
             bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\{i}/)
-            }
+    
         }
         stage("Clonning git repo"){
-            steps{
+            
                 dir("${env.WORKSPACE}/${BUILD_NUMBER}/{i}"){
                     git url:'https://github.com/leonidesfernando/perf-tests', branch: 'main'
                 }
-            }
+            
         }
         stage("Configuring Lighthouse"){
-            steps{
+            
                 dir("${env.WORKSPACE}/${BUILD_NUMBER}/{i}/lighthouse"){
                     bat(/npm install/)
                 }
-            }
+            
         }
                     }
                  }

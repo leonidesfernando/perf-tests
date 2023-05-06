@@ -64,11 +64,31 @@ def map = [
     ]
 ];
 
+pipeline{
+    agent any
+    parameters {
+        choice(name: "REPEAT", choices: ["1", "3", "5", "10"], description: "Number of repetitions")
+    }
+    stages{
+        stage("Loop"){
+            steps{
+                script{
+                    map.each { entry  ->
+                    stage(entry.key){
+                        callFunction(entry.value).call()
+                    };
+                    }                    
+                }
+            }
+        }
+    }
+}
 
-node {        
+/*
+node {          
 	map.each { entry  ->
 	   stage(entry.key){
 		   callFunction(entry.value).call()
 	   };
 	}
-}
+}*/

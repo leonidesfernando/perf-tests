@@ -97,7 +97,7 @@ pipeline{
                     for(int i = 1; i <= count; i++){
                         echo "couting"
                         stage("Running"){
-                            bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\${count}/)
+                            bat(/mkdir ${env.WORKSPACE}\${BUILD_NUMBER}\count/)
                             dir("${env.WORKSPACE}/${BUILD_NUMBER}\${count}/lighthouse"){
                                 bat(/node shopizer.js/)
                             }

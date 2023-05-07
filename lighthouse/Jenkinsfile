@@ -64,7 +64,24 @@ def map = [
     ]
 ];
 
+pipeline{
+    agent any
+    stages{
+        stage("Loop"){
+            steps{
+                script{
+                    map.each { entry  ->
+                        stage(entry.key){
+                            callFunction(entry.value).call()
+                        };
+                    }                    
+                }
+            }
+        }
+    }
+}
 
+/*
 pipeline{
     agent any
     parameters {
@@ -110,7 +127,7 @@ pipeline{
             }
         }
     }
-}
+}*/
 
 
 

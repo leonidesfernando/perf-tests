@@ -2,6 +2,8 @@ const fs = require('fs')
 const puppeteer = require('puppeteer')
 const lighthouse = require('lighthouse/lighthouse-core/fraggle-rock/api.js')
 const {generateReport} = require('lighthouse/report/generator/report-generator.js');
+const { Command } = require('commander');
+
 
 const waitTillHTMLRendered = async (page, timeout = 30000) => {
   const checkDurationMsecs = 1000;
@@ -75,62 +77,76 @@ async function captureReport() {
 	const tableProduct = "a[href='/product/olive-table']";
 	const addTableToCart = "#root > div.shop-area.pt-100.pb-100 > div > div > div:nth-child(2) > div > div.pro-details-quality > div.pro-details-cart.btn-hover";
 
-  	//================================Open the application================================
-    await flow.navigate(baseURL, {
-		stepName: 'open main page'
-		});
-  	console.log('Main page is opened');
-	
-	//================================Navigate to "Tables" tab================================
-	
-	console.log('Opening Tables');
-	await flow.startTimespan({ stepName: 'Navigate to "Tables" tab' });
-		await page.waitForSelector(tablesTab);
-		await page.click(tablesTab);
-		await waitTillHTMLRendered(page);
-	await flow.endTimespan();
-	console.log('Tables page is opened');
-	
 
-	//================================Open a table product cart (click on a table)================================
-	console.log('Clicking on table product');
-	await flow.startTimespan({ stepName: 'Open a table product cart (click on a table)' });
-		await page.waitForSelector(tableProduct);
-		await page.click(tableProduct);
-		//await navigationPromise;
+	const program = new Command();
+	program.option('--loops');
+	program.parse();
+	const options = program.opts();
+
+	let nLoops = 1;
+	if(options.loops){
+		nLoops = program.args[0].split(options.separator, 1)[0];
+	}
+	console.log(`========= Total loops: ${nLoops} =========\n\n`);
+
+	for(let i = 1; i <= nLoops; i++){
+		console.log(`****** Looping ${i} of ${nLoops} ******\n`);
+		const repetitions = `: ${i} of ${nLoops}`;
+		console.log('Opening Main page' + repetitions);
+
+		//================================Open the application================================
+		await flow.navigate(baseURL, {
+			stepName: 'open main page'
+			});
 		await waitTillHTMLRendered(page);
-	await flow.endTimespan();
-	console.log('Table product clicked');
+		console.log('Main page is opened' + repetitions);
 	
-	//================================Add table to Cart (click "Add to Cart" button)================================
-	console.log('Adding table to cart');
-	await flow.startTimespan({ stepName: 'Add table to Cart (click "Add to Cart" button)' });
-		await page.waitForSelector(addTableToCart);
-		await page.click(addTableToCart);
-		//await navigationPromise;
-		await waitTillHTMLRendered(page);
-	await flow.endTimespan();
-	console.log('Table added to cart');
+		//================================Navigate to "Tables" tab================================
+		
+		console.log('Opening Tables' + repetitions);
+		await flow.startTimespan({ stepName: 'Navigate to "Tables" tab' });
+			await page.waitForSelector(tablesTab);
+			await page.click(tablesTab);
+			await waitTillHTMLRendered(page);
+		await flow.endTimespan();
+		console.log('Tables page is opened' + repetitions);
 
-	//================================Open Cart================================
-	console.log('Opening Tables');
-	await flow.startTimespan({ stepName: 'Open Cart' });
-		await page.goto(baseURL+'/cart');
-		//await navigationPromise;
-		await waitTillHTMLRendered(page);
-	await flow.endTimespan();
-	console.log('Cart opened');
+		//================================Open a table product cart (click on a table)================================
+		console.log('Clicking on table product' + repetitions);
+		await flow.startTimespan({ stepName: 'Open a table product cart (click on a table)' });
+			await page.waitForSelector(tableProduct);
+			await page.click(tableProduct);
+			await waitTillHTMLRendered(page);
+		await flow.endTimespan();
+		console.log('Table product clicked' + repetitions);
 	
-	//================================Click "Proceed to checkout"================================
-	console.log('Click "Proceed to checkout"');
-	await flow.startTimespan({ stepName: 'Click "Proceed to checkout"' });
-		await page.goto(baseURL+'/checkout');
-		//await navigationPromise;
-		await waitTillHTMLRendered(page);
-	await flow.endTimespan();
-	console.log('Checkout done');
+		//================================Add table to Cart (click "Add to Cart" button)================================
+		console.log('Adding table to cart' + repetitions);
+		await flow.startTimespan({ stepName: 'Add table to Cart (click "Add to Cart" button)' });
+			await page.waitForSelector(addTableToCart);
+			await page.click(addTableToCart);
+			await waitTillHTMLRendered(page);
+		await flow.endTimespan();
+		console.log('Table added to cart' + repetitions);
 
+		//================================Open Cart================================
+		console.log('Opening Cart' + repetitions);
+		await flow.startTimespan({ stepName: 'Open Cart' });
+			await page.goto(baseURL+'/cart');
+			await waitTillHTMLRendered(page);
+		await flow.endTimespan();
+		console.log('Cart opened' + repetitions);
+	
+		//================================Click "Proceed to checkout"================================
+		console.log('Click "Proceed to checkout"' + repetitions);
+		await flow.startTimespan({ stepName: 'Click "Proceed to checkout"' });
+			await page.goto(baseURL+'/checkout');
+			await waitTillHTMLRendered(page);
+		await flow.endTimespan();
+		console.log('Checkout done' + repetitions);
+	}
 
+	console.log("It's done, genererating report...")
 	//================================REPORTING================================
 	const reportPath = __dirname + '/user-flow.report.html';
 	//const reportPathJson = __dirname + '/user-flow.report.json';
@@ -146,7 +162,8 @@ async function captureReport() {
 	const flowResult = await flow.createFlowResult();
 	const jsonReportContent =  generateReport(flowResult, "json");
 	//const reportJson = JSON.stringify(jsonReportContent).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-	fs.writeFileSync(reportPathJson, jsonReportContent);
+	fs.writeFileSync(reportPathJson, jsonReportContent); 
     await browser.close();
+	console.log("Report generated.")
 }
 captureReport();
